@@ -1,6 +1,8 @@
 # Optional list of dependencies required by the package
 dependencies = ['torch']
 
+print('here')
+
 from torchvision.models.alexnet import alexnet
 from torchvision.models.densenet import densenet121, densenet169, densenet201, densenet161
 from torchvision.models.inception import inception_v3
