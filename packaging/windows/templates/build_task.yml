@@ -83,7 +83,7 @@ jobs:
 
   ${{ if eq(parameters.msagent, 'true') }}:
     container:
-      image: peterjc123/windows-cuda-container
+      image: peterjc123/windows-cuda-container:v1.0.0
 
   steps:
   - checkout: self
