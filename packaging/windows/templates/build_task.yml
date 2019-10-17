@@ -83,8 +83,7 @@ jobs:
 
   ${{ if eq(parameters.msagent, 'true') }}:
     container:
-      image: '308535385114.dkr.ecr.us-east-1.amazonaws.com/pytorch/pytorch-windows-vs2017-win1803:v1.0.0'
-      endpoint: 'AWS ECR Read-only'
+      image: peterjc123/windows-cuda-container
 
   steps:
   - checkout: self
