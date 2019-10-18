@@ -154,9 +154,10 @@ class ClassificationModelTester(ModelTester):
     def _get_input_shape(self):
         return STANDARD_INPUT_SHAPE
 
-    def _test_classification_model(self, model_callable, num_classes=STANDARD_NUM_CLASSES, **kwargs):
+    def _test_classification_model(self, model_callable, num_classes=STANDARD_NUM_CLASSES, check_scriptable=False, **kwargs):
         model = self._get_test_model(model_callable, num_classes=num_classes, **kwargs)
-        self._check_scriptable(model, True)  # currently, all expected to be scriptable
+        if (check_scriptable):
+            self._check_scriptable(model, True)  # currently, all expected to be scriptable
         test_input = self._get_test_input(shape=self._get_input_shape())
         test_output = self._check_model_correctness(model, test_input)
         return model, test_input, test_output
@@ -164,7 +165,7 @@ class ClassificationModelTester(ModelTester):
 
 class AlexnetTester(ClassificationModelTester):
     def test_alexnet(self):
-        self._test_classification_model(models.alexnet)
+        self._test_classification_model(models.alexnet, check_scriptable=True)
 
 
 # TODO add test for aux_logits arg to factory method
@@ -174,12 +175,12 @@ class InceptionV3Tester(ClassificationModelTester):
         return (1, 3, 299, 299)
 
     def test_inception_v3(self):
-        self._test_classification_model(models.inception_v3)
+        self._test_classification_model(models.inception_v3, check_scriptable=True)
 
 
 class SqueezenetTester(ClassificationModelTester):
     def test_squeezenet1_0(self):
-        self._test_classification_model(models.squeezenet1_0)
+        self._test_classification_model(models.squeezenet1_0, check_scriptable=True)
 
     def test_squeezenet1_1(self):
         self._test_classification_model(models.squeezenet1_1)
@@ -188,7 +189,7 @@ class SqueezenetTester(ClassificationModelTester):
 # TODO add test for width_mult arg to factory method
 class MobilenetTester(ClassificationModelTester):
     def test_mobilenet_v2(self):
-        self._test_classification_model(models.mobilenet_v2)
+        self._test_classification_model(models.mobilenet_v2, check_scriptable=True)
 
     def test_mobilenetv2_residual_setting(self):
         self._test_classification_model(models.mobilenet_v2, inverted_residual_setting=[[1, 16, 1, 1], [6, 24, 2, 2]])
@@ -198,12 +199,12 @@ class MobilenetTester(ClassificationModelTester):
 # TODO add test for transform_input arg to factory method
 class GooglenetTester(ClassificationModelTester):
     def test_googlenet(self):
-        self._test_classification_model(models.googlenet)
+        self._test_classification_model(models.googlenet, check_scriptable=True)
 
 
 class VGGNetTester(ClassificationModelTester):
     def test_vgg11(self):
-        self._test_classification_model(models.vgg11)
+        self._test_classification_model(models.vgg11, check_scriptable=True)
 
     def test_vgg11_bn(self):
         self._test_classification_model(models.vgg11_bn)
@@ -245,8 +246,8 @@ class MNASNetTester(ClassificationModelTester):
 # TODO add test for bn_size arg to factory method
 # TODO add test for drop_rate arg to factory method
 class DensenetTester(ClassificationModelTester):
-    def _test_densenet_plus_mem_eff(self, model_callable):
-        model, test_input, test_output = self._test_classification_model(model_callable)
+    def _test_densenet_plus_mem_eff(self, model_callable, check_scriptable=False):
+        model, test_input, test_output = self._test_classification_model(model_callable, check_scriptable=check_scriptable)
 
         # above, we perform the standard correctness test against the test fixture, and capture key test params
         # below, we check that memory efficient/time inefficient DenseNet implementation behaves like the "standard" one
@@ -258,7 +259,7 @@ class DensenetTester(ClassificationModelTester):
         # NOTE testing against same memory fixtures as the non-mem-efficient version
         self.assertExpected(test_output, rtol=1e-5, atol=1e-5)
 
-    def test_densenet121(self):
+    def test_densenet121(self, check_scriptable=True):
         self._test_densenet_plus_mem_eff(models.densenet121)
 
     def test_densenet161(self):
@@ -276,7 +277,7 @@ class ShufflenetTester(ClassificationModelTester):
         self._test_classification_model(models.shufflenet_v2_x0_5)
 
     def test_shufflenet_v2_x1_0(self):
-        self._test_classification_model(models.shufflenet_v2_x1_0)
+        self._test_classification_model(models.shufflenet_v2_x1_0, check_scriptable=True)
 
     def test_shufflenet_v2_x1_5(self):
         self._test_classification_model(models.shufflenet_v2_x1_5)
@@ -292,7 +293,7 @@ class ResnetTester(ClassificationModelTester):
         return True
 
     def test_resnet18(self):
-        self._test_classification_model(models.resnet18)
+        self._test_classification_model(models.resnet18, check_scriptable=True)
 
     def test_resnet34(self):
         self._test_classification_model(models.resnet34)
@@ -307,7 +308,7 @@ class ResnetTester(ClassificationModelTester):
         self._test_classification_model(models.resnet152)
 
     def test_resnext50_32x4d(self):
-        self._test_classification_model(models.resnext50_32x4d)
+        self._test_classification_model(models.resnext50_32x4d, check_scriptable=True)
 
     def test_resnext101_32x8d(self):
         self._test_classification_model(models.resnext101_32x8d)
